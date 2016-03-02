@@ -10,38 +10,10 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-                            
+    
     var window: UIWindow?
-
-    func showNDHpple() {
-        
-        NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: "https://www.reddit.com/r/swift")!) { data, response, error in
-            
-            let html = NSString(data: data!, encoding: NSUTF8StringEncoding)
-            let parser = NDHpple(HTMLData: html! as String)
-            
-            let xpath = "//*[@id='siteTable']/div/div[2]/p[@class='title']/a"
-            
-            guard let titles = parser.searchWithXPathQuery(xpath) else { return }
-            
-            for node in titles {
-                
-                print(node.firstChild?.content!)
-            }
-        }.resume()
-    }
-
-    func applicationDidFinishLaunching(application: UIApplication) {
-        
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        // Override point for customization after application launch.
-        self.window!.backgroundColor = UIColor.whiteColor()
-        self.window!.makeKeyAndVisible()
-        self.window!.rootViewController = UIViewController()
-        
-        showNDHpple()
-    }
-
+    
+    
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
