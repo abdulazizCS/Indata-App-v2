@@ -13,8 +13,9 @@ var sarrayOfDates = [String]()
 var sarrayOfAuthors = [String]()
 var sarrayOfLinks = [String]()
 
-class SearchResultsViewController: UIViewController, UITableViewDelegate {
-
+class SearchResultsViewController: UIViewController, UITableViewDelegate, UISearchBarDelegate {
+    
+    
     var stitlesArray = [String]()
     var sdatesArray = [String]()
     var sauthorsArray = [String]()
@@ -27,18 +28,12 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate {
 
         self.title = "\(query)"
         
-        self.loadSearchResults()
-
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
-            
+            self.refreshTable()
         }
-
+        
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-      
-
-    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -46,14 +41,25 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate {
     }
     
     
-    override func viewDidAppear(animated: Bool) {
-
-      //  self.resultsTable.con
-        self.resultsTable.reloadData()
-
-
+    override func viewWillAppear(animated: Bool) {
+        
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.loadSearchResults()
+            self.refreshTable()
+        }
+        
+        print("Reloaded");
     }
     
+    
+    override func viewDidAppear(animated: Bool) {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.loadSearchResults()
+            self.refreshTable()
+        }
+        
+        print("Reloaded");
+    }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
@@ -77,7 +83,6 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate {
         //let author = String(sarrayOfAuthors[indexPath.row].characters.prefix(1)).uppercaseString + String(sarrayOfAuthors[indexPath.row].characters.dropFirst())
         
             cell.searchResultArticleLabel?.text = sarrayOfTitles[indexPath.row]
-
         
         //cell.sarticleDateLabel?.text = sarrayOfDates[indexPath.row]
 
@@ -95,12 +100,11 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate {
     }
     
     
-    
     func loadSearchResults(){
         
         print("Working!!!!!")
         
-
+        
         if InternetConnection.isConnectedToNetwork().boolValue == true {
             
             NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: "http://www.eastersealstech.com/?s=" + query)!) { data, response, error in
@@ -124,17 +128,9 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate {
                     
                 }
                 
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-
                 
-                print(self.stitlesArray)
                 
                 NSUserDefaults.standardUserDefaults().setObject(self.stitlesArray, forKey: "sarrayOfTitles")
-                
-                    
-                })
-
-
                 
                 
                 //Publish dates
@@ -150,11 +146,11 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate {
                     //print(self.sdatesArray)
                 }
                 
-               // dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    
-                    NSUserDefaults.standardUserDefaults().setObject(self.sdatesArray, forKey: "sarrayOfDates")
-               // })
-               
+                // dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                
+                NSUserDefaults.standardUserDefaults().setObject(self.sdatesArray, forKey: "sarrayOfDates")
+                // })
+                
                 
                 
                 
@@ -171,10 +167,10 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate {
                 }
                 
                 //dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    
-                    NSUserDefaults.standardUserDefaults().setObject(self.sauthorsArray, forKey: "sarrayOfAuthors")
+                
+                NSUserDefaults.standardUserDefaults().setObject(self.sauthorsArray, forKey: "sarrayOfAuthors")
                 //})
-              
+                
                 
                 
                 
@@ -194,11 +190,11 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate {
                 
                 
                 //print(self.linksArray.count)
-               //dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                //dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 
-                    NSUserDefaults.standardUserDefaults().setObject(self.slinksArray, forKey: "sarrayOfLinks")
-               // })
-
+                NSUserDefaults.standardUserDefaults().setObject(self.slinksArray, forKey: "sarrayOfLinks")
+                // })
+                
                 
                 
                 }.resume()
@@ -213,6 +209,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate {
         if NSUserDefaults.standardUserDefaults().objectForKey("sarrayOfTitles") != nil {
             
             sarrayOfTitles = NSUserDefaults.standardUserDefaults().objectForKey("sarrayOfTitles") as! [String]
+            print(self.stitlesArray)
             print("Done!!!!")
         }
         
@@ -234,10 +231,17 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate {
             sarrayOfLinks = NSUserDefaults.standardUserDefaults().objectForKey("sarrayOfLinks") as! [String]
             
         }
-
+        
     }
     
- 
+    
+    func refreshTable()
+    {
+        dispatch_async(dispatch_get_main_queue(), {
+            self.resultsTable.reloadData()
+            return
+        })
+    }
     
     /*
     // MARK: - Navigation

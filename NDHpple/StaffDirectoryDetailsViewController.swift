@@ -20,6 +20,8 @@ class StaffDirectoryDetailsViewController: UIViewController {
     
     @IBOutlet weak var bioWebView: UIWebView!
     
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

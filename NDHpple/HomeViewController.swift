@@ -10,15 +10,15 @@ import UIKit
 
 var query:String = ""
 
-
-
-
-class HomeViewController: UIViewController {
-    
+class HomeViewController: UIViewController, UISearchBarDelegate {
     
     @IBOutlet weak var searchBarNew: UISearchBar!
     
 
+    
+    let searchController = UISearchController(searchResultsController: nil)
+
+    
     @IBAction func loadResults(sender: AnyObject) {
 
         query = searchBarNew.text!
@@ -27,6 +27,7 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 
         if InternetConnection.isConnectedToNetwork().boolValue == true {
             print("Internet is working!")
@@ -57,18 +58,29 @@ class HomeViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+
+
     
     
-    func searchBarSearchButtonClicked(searchBarNew: UISearchBar) {
-        
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 
     }
+//    func searchBarSearchButtonClicked( searchBar: UISearchBar) {
+//        
+//        let vc = self.storyboard!.instantiateViewControllerWithIdentifier("searchResults") as! SearchResultsViewController
+//        self.presentViewController(vc, animated: true, completion: nil)
+//    
+//
+//    }
     
     override func viewDidAppear(animated: Bool) {
 
         //sarrayOfTitles = [String]()
 
     }
+    
+    
 
     /*
     // MARK: - Navigation
